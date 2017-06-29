@@ -43,7 +43,7 @@ int main() {
 
     // -------------- Setup used processing algo. --------------
     Companion::Configuration *companion = new Companion::Configuration();
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMINGLUT;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
