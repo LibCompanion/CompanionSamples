@@ -27,27 +27,36 @@
 
 void imageStream(Companion::Input::Image *stream) {
 
+    int i = 1;
     int n = 4 - 1;
     int divider = 10;
     std::string fileNr;
+    bool lastImage = false;
 
     // Setup example for an image stream.
-    for(int i = 1; i <= 1182; i++ ) {
+    while(!lastImage) {
         fileNr = "";
 
+        // Only setup to get all files from an folder with an specific name.
         if(i / divider == 1) {
             divider = divider * 10;
             n--;
         }
 
+        // Append zeros to fileNr
         for(int x = 0; x < n; x++) {
             fileNr = fileNr + "0";
         }
 
-        stream->addImage(OBJECT_IMAGES_RAW + fileNr + std::to_string(i) + ".jpg");
+        // Add image to stream
+        if(!stream->addImage(OBJECT_IMAGES_RAW + fileNr + std::to_string(i) + ".jpg")) {
+            lastImage = true;
+        }
 
         // Use this control to adjust the streaming rate
         //cvWaitKey(300);
+
+        i++;
     }
 
     // Stop this stream after all images are processed.
