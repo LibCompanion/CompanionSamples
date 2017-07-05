@@ -75,13 +75,9 @@ int main() {
         }
     }
 
-    // Companion class to execute algorithm
-    std::queue<cv::Mat> queue;
-    Companion::Thread::StreamWorker ps(queue);
-
     try {
         // Execute companion
-        companion->run(ps);
+        companion->run();
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);
     }
