@@ -60,7 +60,9 @@ void imageStream(Companion::Input::Image *stream) {
     }
 
     // Stop this stream after all images are processed.
-    stream->finish();
+    if (stream->isEmpty()) {
+        stream->finish();
+    }
 }
 
 /**
