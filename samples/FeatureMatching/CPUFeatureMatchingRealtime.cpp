@@ -38,8 +38,6 @@ int main() {
     std::vector<std::string> images;
     images.push_back(OBJECT_LEFT);
     images.push_back(OBJECT_RIGHT);
-    // Sample video to search objects.
-    std::string testVideo = VIDEO_EXAMPLE_PATH;
 
     // -------------- Setup used processing algo. --------------
     Companion::Configuration *companion = new Companion::Configuration();
@@ -51,7 +49,7 @@ int main() {
     Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.50));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.5));
     companion->setSkipFrame(0);
     companion->setResultHandler(resultHandler);
     companion->setErrorHandler(errorHandler);
@@ -75,8 +73,8 @@ int main() {
         }
     }
 
+    // Execute companion
     try {
-        // Execute companion
         companion->run();
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);

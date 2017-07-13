@@ -114,8 +114,8 @@ int main() {
         }
     }
 
+    // Execute companion
     try {
-        // Execute companion
         companion->run();
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);

@@ -58,7 +58,7 @@ int main() {
     companion->setErrorHandler(errorHandler);
 
     // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo); // Load an video
+    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
 
     // Set input source
     companion->setSource(stream);
@@ -76,8 +76,8 @@ int main() {
         }
     }
 
+    // Execute companion
     try {
-        // Execute companion
         companion->run();
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);

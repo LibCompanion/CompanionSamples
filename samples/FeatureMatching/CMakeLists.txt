@@ -18,52 +18,60 @@
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-# Create executable and set linked libraries
-add_executable(CPUFeatureMatchingVideo CPUFeatureMatchingVideo.cpp util.cpp util.h)
+# Add generic source files
+set(SOURCE_UTIL util.cpp util.h)
+
+# Setup CPUFeatureMatchingVideo
+set(SOURCE1 CPUFeatureMatchingVideo.cpp ${SOURCE_UTIL})
+add_executable(CPUFeatureMatchingVideo ${SOURCE1})
 target_link_libraries(CPUFeatureMatchingVideo Companion)
-# Add target properties
-set_property(TARGET CPUFeatureMatchingVideo PROPERTY FOLDER "libCompanion")
-# add install instructions (also add debug postfix for differentiation)
-set_property(TARGET CPUFeatureMatchingVideo PROPERTY DEBUG_POSTFIX "D")
-install(TARGETS CPUFeatureMatchingVideo DESTINATION "${PROJECT_BINARY_DIR}/install/bin" OPTIONAL)
 
-# Create executable and set linked libraries
-add_executable(CPUFeatureMatchingRealtime CPUFeatureMatchingRealtime.cpp util.cpp util.h)
+# Setup CPUFeatureMatchingRealtime
+set(SOURCE2 CPUFeatureMatchingRealtime.cpp ${SOURCE_UTIL})
+add_executable(CPUFeatureMatchingRealtime ${SOURCE2})
 target_link_libraries(CPUFeatureMatchingRealtime Companion)
-# Add target properties
-set_property(TARGET CPUFeatureMatchingRealtime PROPERTY FOLDER "libCompanion")
-# add install instructions (also add debug postfix for differentiation)
-set_property(TARGET CPUFeatureMatchingRealtime PROPERTY DEBUG_POSTFIX "D")
-install(TARGETS CPUFeatureMatchingRealtime DESTINATION "${PROJECT_BINARY_DIR}/install/bin" OPTIONAL)
 
-# Create executable and set linked libraries
-add_executable(CPUFeatureMatchingImageStream CPUFeatureMatchingImageStream.cpp util.cpp util.h)
+# Setup CPUFeatureMatchingImageStream
+set(SOURCE3 CPUFeatureMatchingImageStream.cpp ${SOURCE_UTIL})
+add_executable(CPUFeatureMatchingImageStream ${SOURCE3})
 target_link_libraries(CPUFeatureMatchingImageStream Companion)
-# Add target properties
-set_property(TARGET CPUFeatureMatchingImageStream PROPERTY FOLDER "libCompanion")
-# add install instructions (also add debug postfix for differentiation)
-set_property(TARGET CPUFeatureMatchingImageStream PROPERTY DEBUG_POSTFIX "D")
-install(TARGETS CPUFeatureMatchingImageStream DESTINATION "${PROJECT_BINARY_DIR}/install/bin" OPTIONAL)
 
+# Setup CudaFeatureMatchingVideo
 if(Companion_USE_CUDA)
-    # Create executable and set linked libraries
-    add_executable(CudaFeatureMatchingVideo CudaFeatureMatchingVideo.cpp util.cpp util.h)
+    set(SOURCE4 CudaFeatureMatchingVideo.cpp ${SOURCE_UTIL})
+    set(CUDA_TARGET CudaFeatureMatchingVideo)
+    add_executable(CudaFeatureMatchingVideo ${SOURCE4})
     target_link_libraries(CudaFeatureMatchingVideo Companion)
-    # Add target properties
-    set_property(TARGET CudaFeatureMatchingVideo PROPERTY FOLDER "libCompanion")
-    # add install instructions (also add debug postfix for differentiation)
-    set_property(TARGET CudaFeatureMatchingVideo PROPERTY DEBUG_POSTFIX "D")
-    install(TARGETS CudaFeatureMatchingVideo DESTINATION "${PROJECT_BINARY_DIR}/install/bin" OPTIONAL)
+endif()
+
+# Combine all sources and targets
+set(ALL_SOURCES ${SOURCE1} ${SOURCE2} ${SOURCE3} ${SOURCE4} ${SOURCE_UTIL})
+set(ALL_TARGETS CPUFeatureMatchingVideo CPUFeatureMatchingRealtime CPUFeatureMatchingImageStream ${CUDA_TARGET})
+
+# Add target properties
+set_property(TARGET ${ALL_TARGETS} PROPERTY FOLDER "libCompanionSamples")
+
+# Add install instructions (also add debug postfix for differentiation)
+set_property(TARGET ${ALL_TARGETS} PROPERTY DEBUG_POSTFIX "D")
+install(TARGETS ${ALL_TARGETS} DESTINATION "${PROJECT_BINARY_DIR}/install/bin" OPTIONAL)
+
+# Create MSVC filter
+if(MSVC)
+    foreach(source IN LISTS ALL_SOURCES)
+        get_filename_component(source_path "${source}" PATH)
+        string(REPLACE "/" "\\" source_path_msvc "${source_path}")
+        source_group("${source_path_msvc}" FILES "${source}")
+    endforeach()
 endif()
 
 # Ressource files
-INCLUDE_DIRECTORIES(
+include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-SET(VIDEO_EXAMPLE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/video/lab.mov")
-SET(OBJECT_LEFT "${CMAKE_CURRENT_SOURCE_DIR}/models/poster_left.jpg")
-SET(OBJECT_RIGHT "${CMAKE_CURRENT_SOURCE_DIR}/models/poster_right.jpg")
-SET(OBJECT_IMAGES_RAW "${CMAKE_CURRENT_SOURCE_DIR}/images/lab")
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/ressources.h @ONLY)
+set(VIDEO_EXAMPLE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/video/lab.mov")
+set(OBJECT_LEFT "${CMAKE_CURRENT_SOURCE_DIR}/models/poster_left.jpg")
+set(OBJECT_RIGHT "${CMAKE_CURRENT_SOURCE_DIR}/models/poster_right.jpg")
+set(OBJECT_IMAGES_RAW "${CMAKE_CURRENT_SOURCE_DIR}/images/lab")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/ressources.h @ONLY)
