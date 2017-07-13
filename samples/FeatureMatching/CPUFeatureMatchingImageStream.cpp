@@ -54,7 +54,7 @@ void imageStream(Companion::Input::Image *stream) {
         }
 
         // Use this control to adjust the streaming rate
-        //cvWaitKey(300);
+        //std::this_thread::sleep_for(std::chrono::seconds(1));
 
         i++;
     }
@@ -85,12 +85,13 @@ int main() {
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-    Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+    Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.30));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.30, 960));
     companion->setSkipFrame(0);
-    companion->setResultHandler(resultHandler);
+    companion->setImageBuffer(10);
+    companion->setResultHandler(resultHandler, Companion::ColorFormat::BGR);
     companion->setErrorHandler(errorHandler);
 
     // Setup example for an streaming data from a set of images.
@@ -116,10 +117,12 @@ int main() {
     try {
         // Execute companion
         companion->run();
-        imgThread.join(); // External img thread to add images by processing.
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);
     }
+
+    // Wait for worker thread that adds images for processing to be finished.
+    imgThread.join();
 
     return 0;
 }
