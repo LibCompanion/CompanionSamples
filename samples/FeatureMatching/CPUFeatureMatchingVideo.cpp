@@ -51,7 +51,7 @@ int main() {
     Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.25));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, Companion::SCALING::SCALE_640x360));
     companion->setSkipFrame(0);
 	companion->setImageBuffer(20);
     companion->setResultHandler(resultHandler);
