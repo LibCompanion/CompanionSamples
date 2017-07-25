@@ -38,7 +38,6 @@ void resultHandler(CALLBACK_RESULT results, cv::Mat source) {
                     frame->getThickness());
     }
 
-    cv::cvtColor(source, source, CV_RGB2BGR);
     cv::imshow("Object detection", source);
     cv::waitKey(1);
     source.release();

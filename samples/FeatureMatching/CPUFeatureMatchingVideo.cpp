@@ -33,8 +33,8 @@
  *   - Callback handler example are implemented in util.h
  */
 int main() {
-
-    // Sample objects to search as an image list.
+	
+	// Sample objects to search as an image list.
     std::vector<std::string> images;
     images.push_back(OBJECT_LEFT);
     images.push_back(OBJECT_RIGHT);
@@ -51,13 +51,14 @@ int main() {
     Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.40));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, Companion::SCALING::SCALE_640x360));
     companion->setSkipFrame(0);
+	companion->setImageBuffer(20);
     companion->setResultHandler(resultHandler);
     companion->setErrorHandler(errorHandler);
 
     // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo); // Load an video
+    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
 
     // Set input source
     companion->setSource(stream);
@@ -75,13 +76,9 @@ int main() {
         }
     }
 
-    // Companion class to execute algorithm
-    std::queue<cv::Mat> queue;
-    Companion::Thread::StreamWorker ps(queue);
-
+    // Execute companion
     try {
-        // Execute companion
-        companion->run(ps);
+        companion->run();
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);
     }

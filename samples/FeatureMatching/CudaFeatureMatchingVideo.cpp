@@ -52,13 +52,13 @@ int main() {
     Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, 10, 40);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, 0.50));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, Companion::SCALING::SCALE_640x360));
     companion->setSkipFrame(0);
     companion->setResultHandler(resultHandler);
     companion->setErrorHandler(errorHandler);
 
     // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo); // Load an video
+    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
 
     // Set input source
     companion->setSource(stream);
@@ -76,13 +76,9 @@ int main() {
         }
     }
 
-    // Companion class to execute algorithm
-    std::queue<cv::Mat> queue;
-    Companion::Thread::StreamWorker ps(queue);
-
+    // Execute companion
     try {
-        // Execute companion
-        companion->run(ps);
+        companion->run();
     } catch (Companion::Error::Code errorCode) {
         errorHandler(errorCode);
     }
