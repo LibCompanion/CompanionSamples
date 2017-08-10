@@ -46,10 +46,10 @@ int main() {
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(30);
-    Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+    Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, Companion::SCALING::SCALE_960x540));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, matching, Companion::SCALING::SCALE_960x540));
     companion->setSkipFrame(0);
     companion->setResultHandler(resultHandler);
     companion->setErrorHandler(errorHandler);
