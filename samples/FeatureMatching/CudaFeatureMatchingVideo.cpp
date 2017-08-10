@@ -49,10 +49,10 @@ int main() {
     // -------------- CUDA ORB GPU FM  --------------
     cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
     feature->setBlurForDescriptor(true);
-    Companion::Algorithm::ImageRecognition *recognition = new Companion::Algorithm::FeatureMatching(feature, 10, 40);
+    Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, 10, 40);
 
     // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, recognition, Companion::SCALING::SCALE_640x360));
+    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, matching, Companion::SCALING::SCALE_640x360));
     companion->setSkipFrame(0);
     companion->setResultHandler(resultHandler);
     companion->setErrorHandler(errorHandler);
