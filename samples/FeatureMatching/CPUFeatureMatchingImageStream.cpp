@@ -27,40 +27,40 @@
 
 void imageStream(Companion::Input::Image *stream) {
 
-    int i = 1;
-    int n = 4 - 1;
-    int divider = 10;
-    std::string fileNr;
-    bool lastImage = false;
+	int i = 1;
+	int n = 4 - 1;
+	int divider = 10;
+	std::string fileNr;
+	bool lastImage = false;
 
-    // Setup example for an image stream.
-    while(!lastImage) {
-        fileNr = "";
+	// Setup example for an image stream.
+	while (!lastImage) {
+		fileNr = "";
 
-        // Only setup to get all files from an folder with an specific name.
-        if(i / divider == 1) {
-            divider = divider * 10;
-            n--;
-        }
+		// Only setup to get all files from an folder with an specific name.
+		if (i / divider == 1) {
+			divider = divider * 10;
+			n--;
+		}
 
-        // Append zeros to fileNr
-        for(int x = 0; x < n; x++) {
-            fileNr = fileNr + "0";
-        }
+		// Append zeros to fileNr
+		for (int x = 0; x < n; x++) {
+			fileNr = fileNr + "0";
+		}
 
-        // Add image to stream
-        if(!stream->addImage(OBJECT_IMAGES_RAW + fileNr + std::to_string(i) + ".jpg")) {
-            lastImage = true;
-        }
+		// Add image to stream
+		if (!stream->addImage(OBJECT_IMAGES_RAW + fileNr + std::to_string(i) + ".jpg")) {
+			lastImage = true;
+		}
 
-        // Use this control to adjust the streaming rate
-        //std::this_thread::sleep_for(std::chrono::seconds(1));
+		// Use this control to adjust the streaming rate
+		//std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        i++;
-    }
+		i++;
+	}
 
-    // Stop this stream after all images are processed.
-    stream->finishAfterProcessing();
+	// Stop this stream after all images are processed.
+	stream->finishAfterProcessing();
 }
 
 /**
@@ -73,56 +73,57 @@ void imageStream(Companion::Input::Image *stream) {
  */
 int main() {
 
-    // Sample objects to search as an image list.
-    std::vector<std::string> images;
-    images.push_back(OBJECT_LEFT);
-    images.push_back(OBJECT_RIGHT);
+	// Sample objects to search as an image list.
+	std::vector<std::string> images;
+	images.push_back(OBJECT_LEFT);
+	images.push_back(OBJECT_RIGHT);
 
-    // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
+	// -------------- Setup used processing algo. --------------
+	Companion::Configuration *companion = new Companion::Configuration();
+	int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
-    // -------------- BRISK CPU FM --------------
-    cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-    Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
+	// -------------- BRISK CPU FM --------------
+	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
+	Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
 
-    // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, matching, Companion::SCALING::SCALE_960x540));
-    companion->setSkipFrame(0);
-    companion->setImageBuffer(10);
-    companion->setResultHandler(resultHandler, Companion::ColorFormat::BGR);
-    companion->setErrorHandler(errorHandler);
+	// -------------- Image Processing Setup --------------
+	companion->setProcessing(new Companion::Processing::ObjectDetection(companion, matching, Companion::SCALING::SCALE_960x540));
+	companion->setSkipFrame(0);
+	companion->setImageBuffer(10);
+	companion->setResultHandler(resultHandler, Companion::ColorFormat::BGR);
+	companion->setErrorHandler(errorHandler);
 
-    // Setup example for an streaming data from a set of images.
-    Companion::Input::Image *stream = new Companion::Input::Image(50);
-    std::thread imgThread = std::thread(&imageStream, stream);
+	// Setup example for an streaming data from a set of images.
+	Companion::Input::Image *stream = new Companion::Input::Image(50);
+	std::thread imgThread = std::thread(&imageStream, stream);
 
-    // Set input source
-    companion->setSource(stream);
+	// Set input source
+	companion->setSource(stream);
 
-    // Store all searched data models
-    Companion::Model::Processing::FeatureMatchingModel *model;
-    for (int i = 0; i < images.size(); i++) {
+	// Store all searched data models
+	Companion::Model::Processing::FeatureMatchingModel *model;
+	for (int i = 0; i < images.size(); i++) {
 
-        model = new Companion::Model::Processing::FeatureMatchingModel();
-        model->setID(i);
-        model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
+		model = new Companion::Model::Processing::FeatureMatchingModel();
+		model->setID(i);
+		model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
 
-        if(!companion->addModel(model)) {
-            std::cout << "Model not added";
-        }
-    }
+		if (!companion->addModel(model)) {
+			std::cout << "Model not added";
+		}
+	}
 
-    // Execute companion
-    try {
-        companion->run();
-    } catch (Companion::Error::Code errorCode) {
-        errorHandler(errorCode);
-    }
+	// Execute companion
+	try {
+		companion->run();
+	}
+	catch (Companion::Error::Code errorCode) {
+		errorHandler(errorCode);
+	}
 
-    // Wait for worker thread that adds images for processing to be finished.
-    imgThread.join();
+	// Wait for worker thread that adds images for processing to be finished.
+	imgThread.join();
 
-    return 0;
+	return 0;
 }

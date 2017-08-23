@@ -24,64 +24,65 @@
 #include "util.h"
 #include "ressources.h"
 
-/**
- * This example show an setup for an Cuda based feature matching companion configuration. Following features will be shown
- * in this example.
- *   - Video file handling
- *   - Model handling to search in video
- *   - Cuda based feature matching with OpenCV 3.X (Cuda ORB algorithm will be used)
- *   - Callback handler example are implemented in util.h
- */
+ /**
+  * This example show an setup for an Cuda based feature matching companion configuration. Following features will be shown
+  * in this example.
+  *   - Video file handling
+  *   - Model handling to search in video
+  *   - Cuda based feature matching with OpenCV 3.X (Cuda ORB algorithm will be used)
+  *   - Callback handler example are implemented in util.h
+  */
 int main() {
 
-    // Sample objects to search as an image list.
-    std::vector<std::string> images;
-    images.push_back(OBJECT_LEFT);
-    images.push_back(OBJECT_RIGHT);
-    // Sample video to search objects.
-    std::string testVideo = VIDEO_EXAMPLE_PATH;
+	// Sample objects to search as an image list.
+	std::vector<std::string> images;
+	images.push_back(OBJECT_LEFT);
+	images.push_back(OBJECT_RIGHT);
+	// Sample video to search objects.
+	std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-    // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
+	// -------------- Setup used processing algo. --------------
+	Companion::Configuration *companion = new Companion::Configuration();
+	int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
-    // -------------- CUDA ORB GPU FM  --------------
-    cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
-    feature->setBlurForDescriptor(true);
-    Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, 10, 40);
+	// -------------- CUDA ORB GPU FM  --------------
+	cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
+	feature->setBlurForDescriptor(true);
+	Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, 10, 40);
 
-    // -------------- Image Processing Setup --------------
-    companion->setProcessing(new Companion::Processing::ObjectDetection(companion, matching, Companion::SCALING::SCALE_640x360));
-    companion->setSkipFrame(0);
-    companion->setResultHandler(resultHandler);
-    companion->setErrorHandler(errorHandler);
+	// -------------- Image Processing Setup --------------
+	companion->setProcessing(new Companion::Processing::ObjectDetection(companion, matching, Companion::SCALING::SCALE_640x360));
+	companion->setSkipFrame(0);
+	companion->setResultHandler(resultHandler);
+	companion->setErrorHandler(errorHandler);
 
-    // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
+	// Setup video source to obtain images.
+	Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
 
-    // Set input source
-    companion->setSource(stream);
+	// Set input source
+	companion->setSource(stream);
 
-    // Store all searched data models
-    Companion::Model::Processing::FeatureMatchingModel *model;
-    for (int i = 0; i < images.size(); i++) {
+	// Store all searched data models
+	Companion::Model::Processing::FeatureMatchingModel *model;
+	for (int i = 0; i < images.size(); i++) {
 
-        model = new Companion::Model::Processing::FeatureMatchingModel();
-        model->setID(i);
-        model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
+		model = new Companion::Model::Processing::FeatureMatchingModel();
+		model->setID(i);
+		model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
 
-        if(!companion->addModel(model)) {
-            std::cout << "Model not added";
-        }
-    }
+		if (!companion->addModel(model)) {
+			std::cout << "Model not added";
+		}
+	}
 
-    // Execute companion
-    try {
-        companion->run();
-    } catch (Companion::Error::Code errorCode) {
-        errorHandler(errorCode);
-    }
+	// Execute companion
+	try {
+		companion->run();
+	}
+	catch (Companion::Error::Code errorCode) {
+		errorHandler(errorCode);
+	}
 
-    return 0;
+	return 0;
 }
