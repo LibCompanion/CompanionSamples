@@ -29,13 +29,14 @@ void resultHandler(CALLBACK_RESULT results, cv::Mat source) {
 
 		// Draw the id of the detected object
 		Companion::Draw::Frame *frame = dynamic_cast<Companion::Draw::Frame*>(result->getModel());
-		cv::putText(source,
-			std::to_string(result->getId()),
-			frame->getTopRight(),
-			cv::FONT_HERSHEY_DUPLEX,
-			2,
-			frame->getColor(),
-			frame->getThickness());
+        cv::putText(source,
+            std::to_string(result->getId()),
+            frame->getTopRight(),
+            cv::FONT_HERSHEY_DUPLEX,
+            2.0,
+            frame->getColor(),
+            frame->getThickness()
+        );
 	}
 
 	cv::imshow("Object detection", source);
@@ -46,5 +47,5 @@ void resultHandler(CALLBACK_RESULT results, cv::Mat source) {
 
 void errorHandler(Companion::Error::Code code) {
 	// Obtain detailed error message from code
-	std::cout << Companion::Error::getError(code) << "\n";
+	std::cout << Companion::Error::getError(code) << std::endl;
 }

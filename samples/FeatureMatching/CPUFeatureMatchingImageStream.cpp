@@ -53,7 +53,7 @@ void imageStream(Companion::Input::Image *stream) {
 			lastImage = true;
 		}
 
-		// Use this control to adjust the streaming rate
+		// Use this line to control the streaming rate
 		//std::this_thread::sleep_for(std::chrono::seconds(1));
 
 		i++;
