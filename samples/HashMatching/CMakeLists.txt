@@ -23,32 +23,14 @@ endif()
 # Add generic source files
 set(SOURCE_UTIL ../util.cpp ../util.h)
 
-# Setup CPUFeatureMatchingVideo
-set(SOURCE1 CPUFeatureMatchingVideo.cpp ${SOURCE_UTIL})
-add_executable(CPUFeatureMatchingVideo ${SOURCE1})
-target_link_libraries(CPUFeatureMatchingVideo Companion)
-
-# Setup CPUFeatureMatchingRealtime
-set(SOURCE2 CPUFeatureMatchingRealtime.cpp ${SOURCE_UTIL})
-add_executable(CPUFeatureMatchingRealtime ${SOURCE2})
-target_link_libraries(CPUFeatureMatchingRealtime Companion)
-
-# Setup CPUFeatureMatchingImageStream
-set(SOURCE3 CPUFeatureMatchingImageStream.cpp ${SOURCE_UTIL})
-add_executable(CPUFeatureMatchingImageStream ${SOURCE3})
-target_link_libraries(CPUFeatureMatchingImageStream Companion)
-
-# Setup CudaFeatureMatchingVideo
-if(Companion_USE_CUDA)
-    set(SOURCE4 CudaFeatureMatchingVideo.cpp ${SOURCE_UTIL})
-    set(CUDA_TARGET CudaFeatureMatchingVideo)
-    add_executable(CudaFeatureMatchingVideo ${SOURCE4})
-    target_link_libraries(CudaFeatureMatchingVideo Companion)
-endif()
+# Setup CPUHashMatchingVideo
+set(SOURCE1 CPUHashMatchingVideo.cpp ${SOURCE_UTIL})
+add_executable(CPUHashMatchingVideo ${SOURCE1})
+target_link_libraries(CPUHashMatchingVideo Companion)
 
 # Combine all sources and targets
-set(ALL_SOURCES ${SOURCE1} ${SOURCE2} ${SOURCE3} ${SOURCE4} ${SOURCE_UTIL})
-set(ALL_TARGETS CPUFeatureMatchingVideo CPUFeatureMatchingRealtime CPUFeatureMatchingImageStream ${CUDA_TARGET})
+set(ALL_SOURCES ${SOURCE1} ${SOURCE_UTIL})
+set(ALL_TARGETS CPUHashMatchingVideo)
 
 # Add target properties
 set_property(TARGET ${ALL_TARGETS} PROPERTY FOLDER "libCompanionSamples")

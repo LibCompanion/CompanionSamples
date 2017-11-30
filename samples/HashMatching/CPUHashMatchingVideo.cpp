@@ -17,7 +17,8 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/processing/2D/FeatureDetection.h>
+#include <companion/algo/2D/ShapeDetection.h>
+#include <companion/processing/2D/HashDetection.h>
 #include <companion/algo/2D/FeatureMatching.h>
 #include <companion/input/Video.h>
 
@@ -25,11 +26,11 @@
 #include "ressources.h"
 
  /**
-  * This example show an setup for an CPU based feature matching companion configuration. Following features will be shown
+  * This example show an setup for an CPU based hash matching companion configuration. Following features will be shown
   * in this example.
   *   - Video file handling
   *   - Model handling to search in video
-  *   - CPU based feature matching with OpenCV 3.X (BRISK algorithm will be used)
+  *   - CPU based hash matching
   *   - Callback handler example are implemented in util.h
   */
 int main() 
@@ -37,22 +38,18 @@ int main()
 
 	// Sample objects to search as an image list.
 	std::vector<std::string> images;
-	images.push_back(OBJECT_LEFT);
-	images.push_back(OBJECT_RIGHT);
+	images.push_back(OBJECT_LEFT); // ID 0
+	images.push_back(OBJECT_RIGHT); // ID 1
 	// Sample video to search objects.
 	std::string testVideo = VIDEO_EXAMPLE_PATH;
 
 	// -------------- Setup used processing algo. --------------
 	Companion::Configuration *companion = new Companion::Configuration();
-	int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
-	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
-	// -------------- BRISK CPU FM --------------
-	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-	Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
 	// -------------- Image Processing Setup with shape detection --------------
-	Companion::Processing::FeatureDetection* detection = new Companion::Processing::FeatureDetection(matching, Companion::SCALING::SCALE_640x360);
+	Companion::Algorithm::ShapeDetection* shapeDetection = new Companion::Algorithm::ShapeDetection();
+	Companion::Processing::HashDetection* detection = new Companion::Processing::HashDetection(cv::Size(50, 70), shapeDetection);
 	companion->setProcessing(detection);
 
 	companion->setSkipFrame(0);
@@ -67,15 +64,9 @@ int main()
 	companion->setSource(stream);
 
 	// Store all searched data models
-	Companion::Model::Processing::FeatureMatchingModel *model;
 	for (int i = 0; i < images.size(); i++) 
 	{
-
-		model = new Companion::Model::Processing::FeatureMatchingModel();
-		model->setID(i);
-		model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
-
-		if (!detection->addModel(model)) 
+		if (!detection->addModel(i, cv::imread(images[i], cv::IMREAD_GRAYSCALE)))
 		{
 			std::cout << "Model not added";
 		}

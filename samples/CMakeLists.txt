@@ -16,4 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+set(VIDEO_EXAMPLE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Data/video/lab.mov")
+set(OBJECT_LEFT "${CMAKE_CURRENT_SOURCE_DIR}/Data/models/poster_left.jpg")
+set(OBJECT_RIGHT "${CMAKE_CURRENT_SOURCE_DIR}/Data/models/poster_right.jpg")
+set(OBJECT_IMAGES_RAW "${CMAKE_CURRENT_SOURCE_DIR}/Data/images/lab")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/FeatureMatching/ressources.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/HashMatching/ressources.h @ONLY)
+
 add_subdirectory(FeatureMatching)
+add_subdirectory(HashMatching)
