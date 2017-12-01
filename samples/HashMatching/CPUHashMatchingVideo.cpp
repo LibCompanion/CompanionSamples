@@ -17,6 +17,7 @@
  */
 
 #include <companion/Configuration.h>
+#include <companion/algo/hashing/LSH.h>
 #include <companion/algo/detection/ShapeDetection.h>
 #include <companion/processing/HashDetection.h>
 #include <companion/algo/Matching/FeatureMatching.h>
@@ -46,11 +47,15 @@ int main()
 	// -------------- Setup used processing algo. --------------
 	Companion::Configuration *companion = new Companion::Configuration();
 
-
 	// -------------- Image Processing Setup with shape detection --------------
 	Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
+    Companion::Algorithm::Hashing::LSH *lsh = new Companion::Algorithm::Hashing::LSH();
+
 	// Original Aspect Ration is 397x561
-	Companion::Processing::HashDetection* detection = new Companion::Processing::HashDetection(cv::Size(50, 70), shapeDetection);
+	Companion::Processing::HashDetection* detection = new Companion::Processing::HashDetection(cv::Size(50, 70), 
+        shapeDetection,
+        lsh);
+
 	companion->setProcessing(detection);
 
 	companion->setSkipFrame(0);
