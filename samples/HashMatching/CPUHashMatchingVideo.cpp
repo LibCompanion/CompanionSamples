@@ -17,9 +17,9 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/algo/2D/ShapeDetection.h>
-#include <companion/processing/2D/HashDetection.h>
-#include <companion/algo/2D/FeatureMatching.h>
+#include <companion/algo/detection/ShapeDetection.h>
+#include <companion/processing/HashDetection.h>
+#include <companion/algo/Matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 
 #include "../util.h"
@@ -48,7 +48,8 @@ int main()
 
 
 	// -------------- Image Processing Setup with shape detection --------------
-	Companion::Algorithm::ShapeDetection* shapeDetection = new Companion::Algorithm::ShapeDetection();
+	Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
+	// Original Aspect Ration is 397x561
 	Companion::Processing::HashDetection* detection = new Companion::Processing::HashDetection(cv::Size(50, 70), shapeDetection);
 	companion->setProcessing(detection);
 

@@ -17,8 +17,8 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/processing/2D/FeatureDetection.h>
-#include <companion/algo/2D/FeatureMatching.h>
+#include <companion/processing/FeatureDetection.h>
+#include <companion/algo/Matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 
 #include "../util.h"
@@ -47,7 +47,7 @@ int main()
 
 	// -------------- BRISK CPU FM --------------
 	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(30);
-	Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+	Companion::Algorithm::Matching::Matching *matching = new Companion::Algorithm::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
 	// -------------- Image Processing Setup --------------
 	Companion::Processing::FeatureDetection* detection = new Companion::Processing::FeatureDetection(matching, Companion::SCALING::SCALE_640x360);
@@ -73,7 +73,7 @@ int main()
 
 		if (!detection->addModel(model)) 
 		{
-			std::cout << "Model ID" << model->getID << " not added";
+			std::cout << "Model ID" << model->getID() << " not added";
 		}
 	}
 

@@ -17,8 +17,8 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/processing/2D/FeatureDetection.h>
-#include <companion/algo/2D/FeatureMatching.h>
+#include <companion/processing/FeatureDetection.h>
+#include <companion/algo/Matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 
 #include "../util.h"
@@ -50,7 +50,7 @@ int main()
 	// -------------- CUDA ORB GPU FM  --------------
 	cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
 	feature->setBlurForDescriptor(true);
-	Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, 10, 40);
+	Companion::Algorithm::Matching::Matching *matching = new Companion::Algorithm::Matching::FeatureMatching(feature, 10, 40);
 
 	// -------------- Image Processing Setup --------------
 	Companion::Processing::FeatureDetection* detection = new Companion::Processing::FeatureDetection(matching, Companion::SCALING::SCALE_640x360);
