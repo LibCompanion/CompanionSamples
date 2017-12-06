@@ -20,7 +20,7 @@
 #include <companion/algo/hashing/LSH.h>
 #include <companion/algo/detection/ShapeDetection.h>
 #include <companion/processing/HashDetection.h>
-#include <companion/algo/Matching/FeatureMatching.h>
+#include <companion/algo/matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 
 #include "../util.h"

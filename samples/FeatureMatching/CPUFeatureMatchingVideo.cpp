@@ -18,7 +18,7 @@
 
 #include <companion/Configuration.h>
 #include <companion/processing/FeatureDetection.h>
-#include <companion/algo/Matching/FeatureMatching.h>
+#include <companion/algo/matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 
 #include "../util.h"
