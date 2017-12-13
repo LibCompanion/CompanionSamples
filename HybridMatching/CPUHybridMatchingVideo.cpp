@@ -64,7 +64,7 @@ int main()
         lsh);
 
     // -------------- Image Processing Setup with shape detection --------------
-    Companion::Processing::HybridDetection* detection = new Companion::Processing::HybridDetection(hashDetection, matching, 70);
+    Companion::Processing::HybridDetection* detection = new Companion::Processing::HybridDetection(hashDetection, matching, 50);
     companion->setProcessing(detection);
 
     companion->setSkipFrame(0);
