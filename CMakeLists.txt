@@ -20,5 +20,22 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project(libCompanionSamples)
 
-# Configure samples
-add_subdirectory(samples)
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
+if(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++11")
+endif(MSVC)
+
+set(VIDEO_EXAMPLE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Data/video/lab.mov")
+set(OBJECT_LEFT "${CMAKE_CURRENT_SOURCE_DIR}/Data/models/poster_left.jpg")
+set(OBJECT_RIGHT "${CMAKE_CURRENT_SOURCE_DIR}/Data/models/poster_right.jpg")
+set(OBJECT_IMAGES_RAW "${CMAKE_CURRENT_SOURCE_DIR}/Data/images/lab")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/FeatureMatching/ressources.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/HashMatching/ressources.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ressources.h.in ${CMAKE_CURRENT_BINARY_DIR}/HybridMatching/ressources.h @ONLY)
+
+add_subdirectory(FeatureMatching)
+add_subdirectory(HashMatching)
+add_subdirectory(HybridMatching)

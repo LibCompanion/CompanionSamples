@@ -17,11 +17,11 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/processing/2D/ObjectDetection.h>
-#include <companion/algo/2D/FeatureMatching.h>
+#include <companion/processing/FeatureDetection.h>
+#include <companion/algo/matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 
-#include "util.h"
+#include "../util.h"
 #include "ressources.h"
 
  /**
@@ -32,7 +32,8 @@
   *   - CPU based feature matching with OpenCV 3.X (BRISK algorithm will be used)
   *   - Callback handler example are implemented in util.h
   */
-int main() {
+int main() 
+{
 
 	// Sample objects to search as an image list.
 	std::vector<std::string> images;
@@ -48,12 +49,11 @@ int main() {
 
 	// -------------- BRISK CPU FM --------------
 	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-	Companion::Algorithm::Matching *matching = new Companion::Algorithm::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+	Companion::Algorithm::Matching::Matching *matching = new Companion::Algorithm::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
 	// -------------- Image Processing Setup with shape detection --------------
-	companion->setProcessing(new Companion::Processing::ObjectDetection(companion,
-		matching,
-		Companion::SCALING::SCALE_640x360));
+	Companion::Processing::FeatureDetection* detection = new Companion::Processing::FeatureDetection(matching, Companion::SCALING::SCALE_640x360);
+	companion->setProcessing(detection);
 
 	companion->setSkipFrame(0);
 	companion->setImageBuffer(20);
@@ -68,22 +68,26 @@ int main() {
 
 	// Store all searched data models
 	Companion::Model::Processing::FeatureMatchingModel *model;
-	for (int i = 0; i < images.size(); i++) {
+	for (int i = 0; i < images.size(); i++) 
+	{
 
 		model = new Companion::Model::Processing::FeatureMatchingModel();
 		model->setID(i);
 		model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
 
-		if (!companion->addModel(model)) {
+		if (!detection->addModel(model)) 
+		{
 			std::cout << "Model not added";
 		}
 	}
 
 	// Execute companion
-	try {
+	try 
+	{
 		companion->run();
 	}
-	catch (Companion::Error::Code errorCode) {
+	catch (Companion::Error::Code errorCode) 
+	{
 		errorHandler(errorCode);
 	}
 
