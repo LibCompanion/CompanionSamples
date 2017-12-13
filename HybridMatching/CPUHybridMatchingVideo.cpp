@@ -39,8 +39,8 @@ int main()
 {
     // Sample objects to search as an image list.
     std::vector<std::string> images;
-    images.push_back(OBJECT_LEFT);
-    images.push_back(OBJECT_RIGHT);
+    images.emplace_back(OBJECT_LEFT);
+    images.emplace_back(OBJECT_RIGHT);
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
@@ -64,7 +64,7 @@ int main()
         lsh);
 
     // -------------- Image Processing Setup with shape detection --------------
-    Companion::Processing::HybridDetection* detection = new Companion::Processing::HybridDetection(hashDetection, matching);
+    Companion::Processing::HybridDetection* detection = new Companion::Processing::HybridDetection(hashDetection, matching, 70);
     companion->setProcessing(detection);
 
     companion->setSkipFrame(0);
