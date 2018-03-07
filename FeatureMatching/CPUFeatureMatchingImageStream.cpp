@@ -17,8 +17,8 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/processing/FeatureDetection.h>
-#include <companion/algo/matching/FeatureMatching.h>
+#include <companion/processing/recognition/MatchRecognition.h>
+#include <companion/algo/recognition/matching/FeatureMatching.h>
 #include <companion/input/Video.h>
 #include <companion/input/Image.h>
 
@@ -77,7 +77,6 @@ void imageStream(Companion::Input::Image *stream) {
  */
 int main() 
 {
-
 	// Sample objects to search as an image list.
 	std::vector<std::string> images;
 	images.push_back(OBJECT_LEFT);
@@ -90,11 +89,11 @@ int main()
 
 	// -------------- BRISK CPU FM --------------
 	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-	Companion::Algorithm::Matching::Matching *matching = new Companion::Algorithm::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
+	Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
 
 	// -------------- Image Processing Setup --------------
-	Companion::Processing::FeatureDetection* detection = new Companion::Processing::FeatureDetection(matching, Companion::SCALING::SCALE_640x360);
-	companion->setProcessing(detection);
+	Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
+	companion->setProcessing(recognition);
 	companion->setSkipFrame(0);
 	companion->setImageBuffer(10);
 	companion->setResultHandler(resultHandler, Companion::ColorFormat::BGR);
@@ -115,7 +114,7 @@ int main()
 		model->setID(i);
 		model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
 
-		if (!detection->addModel(model)) 
+		if (!recognition->addModel(model))
 		{
 			std::cout << "Model not added";
 		}

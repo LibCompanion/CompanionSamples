@@ -18,34 +18,40 @@
 
 #include "util.h"
 
-void resultHandler(CALLBACK_RESULT results, cv::Mat source) {
-	Companion::Model::Result *result;
+void resultHandler(CALLBACK_RESULT results, cv::Mat source)
+{
+    Companion::Draw::Frame *frame;
+	Companion::Model::Result::Result *result;
 
-	for (size_t i = 0; i < results.size(); i++) {
-
-		// Mark the detected object
+	for (size_t i = 0; i < results.size(); i++)
+    {
+		// Mark the detected or recognized object
 		result = results.at(i);
-		result->getModel()->draw(source);
+		result->getDrawable()->draw(source);
 
-		// Draw the id of the detected object
-		Companion::Draw::Frame *frame = dynamic_cast<Companion::Draw::Frame*>(result->getModel());
-        cv::putText(source,
-            std::to_string(result->getId()),
-            frame->getTopRight(),
-            cv::FONT_HERSHEY_DUPLEX,
-            2.0,
-            frame->getColor(),
-            frame->getThickness()
-        );
+		// Draw the id of the detected or recognized object
+		frame = dynamic_cast<Companion::Draw::Frame*>(result->getDrawable());
+        if (frame != nullptr)
+        {
+            cv::putText(source,
+                result->getDescription(),
+                frame->getTopRight(),
+                cv::FONT_HERSHEY_DUPLEX,
+                2.0,
+                frame->getColor(),
+                frame->getThickness()
+            );
+        }
 	}
 
-	cv::imshow("Object detection", source);
+	cv::imshow("Companion", source);
 	cv::waitKey(1);
 	source.release();
 	results.clear();
 }
 
-void errorHandler(Companion::Error::Code code) {
+void errorHandler(Companion::Error::Code code)
+{
 	// Obtain detailed error message from code
 	std::cout << Companion::Error::getError(code) << std::endl;
 }

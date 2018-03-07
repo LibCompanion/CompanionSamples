@@ -17,12 +17,12 @@
  */
 
 #include <companion/Configuration.h>
-#include <companion/processing/HybridDetection.h>
-#include <companion/algo/matching/FeatureMatching.h>
+#include <companion/processing/recognition/HybridRecognition.h>
+#include <companion/algo/recognition/matching/FeatureMatching.h>
 #include <companion/input/Video.h>
-#include <companion/algo/hashing/LSH.h>
+#include <companion/algo/recognition/hashing/LSH.h>
 #include <companion/algo/detection/ShapeDetection.h>
-#include <companion/processing/HashDetection.h>
+#include <companion/processing/recognition/HashRecognition.h>
 
 #include "../util.h"
 #include "ressources.h"
@@ -52,20 +52,20 @@ int main()
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-    Companion::Algorithm::Matching::Matching *matching = new Companion::Algorithm::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
     // -------------- Image Processing Setup with shape detection --------------
     Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
-    Companion::Algorithm::Hashing::LSH *lsh = new Companion::Algorithm::Hashing::LSH();
+    Companion::Algorithm::Recognition::Hashing::LSH *lsh = new Companion::Algorithm::Recognition::Hashing::LSH();
 
     // Original Aspect Ration is 397x561
-    Companion::Processing::HashDetection* hashDetection = new Companion::Processing::HashDetection(cv::Size(50, 70),
+    Companion::Processing::Recognition::HashRecognition* hashRecognition = new Companion::Processing::Recognition::HashRecognition(cv::Size(50, 70),
         shapeDetection,
         lsh);
 
     // -------------- Image Processing Setup with shape detection --------------
-    Companion::Processing::HybridDetection* detection = new Companion::Processing::HybridDetection(hashDetection, matching, 50);
-    companion->setProcessing(detection);
+    Companion::Processing::Recognition::HybridRecognition* recognition = new Companion::Processing::Recognition::HybridRecognition(hashRecognition, matching, 50);
+    companion->setProcessing(recognition);
 
     companion->setSkipFrame(0);
     companion->setImageBuffer(20);
@@ -81,7 +81,7 @@ int main()
     // Store all searched data models
     for (int i = 0; i < images.size(); i++)
     {
-        detection->addModel(cv::imread(images[i], cv::IMREAD_GRAYSCALE), i);
+        recognition->addModel(cv::imread(images[i], cv::IMREAD_GRAYSCALE), i);
     }
 
     // Execute companion
