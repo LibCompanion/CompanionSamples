@@ -51,8 +51,8 @@ int main()
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
-    cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+    cv::Ptr<cv::BRISK> feature = cv::BRISK::create(40);
+    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40);
 
     // -------------- Image Processing Setup with shape detection --------------
     Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
