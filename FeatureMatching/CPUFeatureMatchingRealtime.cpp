@@ -24,67 +24,67 @@
 #include "../util.h"
 #include "ressources.h"
 
- /**
-  * This example show an setup for an CPU based feature matching companion configuration. Following features will be shown
-  * in this example.
-  *   - Realtime video handling. Needed an Video device.
-  *   - Model handling to search in video
-  *   - CPU based feature matching with OpenCV 3.X (BRISK algorithm will be used)
-  *   - Callback handler example are implemented in util.h
-  */
+/**
+ * This example show an setup for an CPU based feature matching companion configuration. Following features will be shown
+ * in this example.
+ *   - Realtime video handling. Needed an Video device.
+ *   - Model handling to search in video
+ *   - CPU based feature matching with OpenCV 3.X (BRISK algorithm will be used)
+ *   - Callback handler example are implemented in util.h
+ */
 int main() 
 {
-	// Sample objects to search as an image list.
-	std::vector<std::string> images;
-	images.push_back(OBJECT_LEFT);
-	images.push_back(OBJECT_RIGHT);
+    // Sample objects to search as an image list.
+    std::vector<std::string> images;
+    images.push_back(OBJECT_LEFT);
+    images.push_back(OBJECT_RIGHT);
 
-	// -------------- Setup used processing algo. --------------
-	Companion::Configuration *companion = new Companion::Configuration();
-	int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
-	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
+    // -------------- Setup used processing algo. --------------
+    Companion::Configuration *companion = new Companion::Configuration();
+    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
-	// -------------- BRISK CPU FM --------------
-	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(30);
-	Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+    // -------------- BRISK CPU FM --------------
+    cv::Ptr<cv::BRISK> feature = cv::BRISK::create(30);
+    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
-	// -------------- Image Processing Setup --------------
-	Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
-	companion->setProcessing(recognition);
-	companion->setSkipFrame(0);
-	companion->setResultHandler(resultHandler);
-	companion->setErrorHandler(errorHandler);
+    // -------------- Image Processing Setup --------------
+    Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
+    companion->setProcessing(recognition);
+    companion->setSkipFrame(0);
+    companion->setResultHandler(resultHandler);
+    companion->setErrorHandler(errorHandler);
 
-	// Setup video source to obtain images.
-	Companion::Input::Stream *stream = new Companion::Input::Video(0); // Use first camera device.
+    // Setup video source to obtain images.
+    Companion::Input::Stream *stream = new Companion::Input::Video(0); // Use first camera device.
 
-	// Set input source
-	companion->setSource(stream);
+    // Set input source
+    companion->setSource(stream);
 
-	// Store all searched data models
-	Companion::Model::Processing::FeatureMatchingModel *model;
-	for (int i = 0; i < images.size(); i++) 
-	{
+    // Store all searched data models
+    Companion::Model::Processing::FeatureMatchingModel *model;
+    for (int i = 0; i < images.size(); i++) 
+    {
 
-		model = new Companion::Model::Processing::FeatureMatchingModel();
-		model->setID(i);
-		model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
+        model = new Companion::Model::Processing::FeatureMatchingModel();
+        model->setID(i);
+        model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
 
-		if (!recognition->addModel(model))
-		{
-			std::cout << "Model ID" << model->getID() << " not added";
-		}
-	}
+        if (!recognition->addModel(model))
+        {
+            std::cout << "Model ID" << model->getID() << " not added";
+        }
+    }
 
-	// Execute companion
-	try 
-	{
-		companion->run();
-	}
-	catch (Companion::Error::Code errorCode)
-	{
-		errorHandler(errorCode);
-	}
+    // Execute companion
+    try 
+    {
+        companion->run();
+    }
+    catch (Companion::Error::Code errorCode)
+    {
+        errorHandler(errorCode);
+    }
 
-	return 0;
+    return 0;
 }

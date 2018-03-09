@@ -21,16 +21,16 @@
 void resultHandler(CALLBACK_RESULT results, cv::Mat source)
 {
     Companion::Draw::Frame *frame;
-	Companion::Model::Result::Result *result;
+    Companion::Model::Result::Result *result;
 
-	for (size_t i = 0; i < results.size(); i++)
+    for (size_t i = 0; i < results.size(); i++)
     {
-		// Mark the detected or recognized object
-		result = results.at(i);
-		result->getDrawable()->draw(source);
+        // Mark the detected or recognized object
+        result = results.at(i);
+        result->getDrawable()->draw(source);
 
-		// Draw the id of the detected or recognized object
-		frame = dynamic_cast<Companion::Draw::Frame*>(result->getDrawable());
+        // Draw the id of the detected or recognized object
+        frame = dynamic_cast<Companion::Draw::Frame*>(result->getDrawable());
         if (frame != nullptr)
         {
             cv::putText(source,
@@ -42,16 +42,16 @@ void resultHandler(CALLBACK_RESULT results, cv::Mat source)
                 frame->getThickness()
             );
         }
-	}
+    }
 
-	cv::imshow("Companion", source);
-	cv::waitKey(1);
-	source.release();
-	results.clear();
+    cv::imshow("Companion", source);
+    cv::waitKey(1);
+    source.release();
+    results.clear();
 }
 
 void errorHandler(Companion::Error::Code code)
 {
-	// Obtain detailed error message from code
-	std::cout << Companion::Error::getError(code) << std::endl;
+    // Obtain detailed error message from code
+    std::cout << Companion::Error::getError(code) << std::endl;
 }

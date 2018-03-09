@@ -23,46 +23,46 @@
 #include "../util.h"
 #include "ressources.h"
 
- /**
-  * This example show an setup for an CPU based shape detection companion configuration. Following features will be shown
-  * in this example.
-  *   - Video file handling
-  *   - CPU based simple quadrangular shape detection
-  *   - Callback handler example are implemented in util.h
-  */
+/**
+ * This example show an setup for an CPU based shape detection companion configuration. Following features will be shown
+ * in this example.
+ *   - Video file handling
+ *   - CPU based simple quadrangular shape detection
+ *   - Callback handler example are implemented in util.h
+ */
 int main() 
 {
-	// Sample video to search objects.
-	std::string testVideo = VIDEO_EXAMPLE_PATH;
+    // Sample video to search objects.
+    std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-	// -------------- Setup used processing algo. --------------
-	Companion::Configuration *companion = new Companion::Configuration();
+    // -------------- Setup used processing algo. --------------
+    Companion::Configuration *companion = new Companion::Configuration();
 
-	// -------------- Image Processing Setup --------------
+    // -------------- Image Processing Setup --------------
     Companion::Algorithm::Detection::ShapeDetection *shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
-	Companion::Processing::Detection::ObjectDetection *detection = new Companion::Processing::Detection::ObjectDetection(shapeDetection);
-	companion->setProcessing(detection);
+    Companion::Processing::Detection::ObjectDetection *detection = new Companion::Processing::Detection::ObjectDetection(shapeDetection);
+    companion->setProcessing(detection);
 
-	companion->setSkipFrame(0);
-	companion->setImageBuffer(20);
-	companion->setResultHandler(resultHandler);
-	companion->setErrorHandler(errorHandler);
+    companion->setSkipFrame(0);
+    companion->setImageBuffer(20);
+    companion->setResultHandler(resultHandler);
+    companion->setErrorHandler(errorHandler);
 
-	// Setup video source to obtain images.
-	Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
+    // Setup video source to obtain images.
+    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
 
-	// Set input source
-	companion->setSource(stream);
+    // Set input source
+    companion->setSource(stream);
 
-	// Execute companion
-	try 
-	{
-		companion->run();
-	}
-	catch (Companion::Error::Code errorCode) 
-	{
-		errorHandler(errorCode);
-	}
+    // Execute companion
+    try 
+    {
+        companion->run();
+    }
+    catch (Companion::Error::Code errorCode) 
+    {
+        errorHandler(errorCode);
+    }
 
-	return 0;
+    return 0;
 }

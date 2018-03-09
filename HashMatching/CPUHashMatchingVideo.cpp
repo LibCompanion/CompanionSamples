@@ -26,66 +26,66 @@
 #include "../util.h"
 #include "ressources.h"
 
- /**
-  * This example show an setup for an CPU based hash matching companion configuration. Following features will be shown
-  * in this example.
-  *   - Video file handling
-  *   - Model handling to search in video
-  *   - CPU based hash matching
-  *   - Callback handler example are implemented in util.h
-  */
+/**
+ * This example show an setup for an CPU based hash matching companion configuration. Following features will be shown
+ * in this example.
+ *   - Video file handling
+ *   - Model handling to search in video
+ *   - CPU based hash matching
+ *   - Callback handler example are implemented in util.h
+ */
 int main() 
 {
-	// Sample objects to search as an image list.
-	std::vector<std::string> images;
-	images.push_back(OBJECT_LEFT); // ID 0
-	images.push_back(OBJECT_RIGHT); // ID 1
-	// Sample video to search objects.
-	std::string testVideo = VIDEO_EXAMPLE_PATH;
+    // Sample objects to search as an image list.
+    std::vector<std::string> images;
+    images.push_back(OBJECT_LEFT); // ID 0
+    images.push_back(OBJECT_RIGHT); // ID 1
+    // Sample video to search objects.
+    std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-	// -------------- Setup used processing algo. --------------
-	Companion::Configuration *companion = new Companion::Configuration();
+    // -------------- Setup used processing algo. --------------
+    Companion::Configuration *companion = new Companion::Configuration();
 
-	// -------------- Image Processing Setup --------------
-	Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
+    // -------------- Image Processing Setup --------------
+    Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
     Companion::Algorithm::Recognition::Hashing::LSH *lsh = new Companion::Algorithm::Recognition::Hashing::LSH();
 
-	// Original Aspect Ration is 397x561
-	Companion::Processing::Recognition::HashRecognition* recognition = new Companion::Processing::Recognition::HashRecognition(cv::Size(50, 70),
+    // Original Aspect Ration is 397x561
+    Companion::Processing::Recognition::HashRecognition* recognition = new Companion::Processing::Recognition::HashRecognition(cv::Size(50, 70),
         shapeDetection,
         lsh);
 
-	companion->setProcessing(recognition);
+    companion->setProcessing(recognition);
 
-	companion->setSkipFrame(0);
-	companion->setImageBuffer(20);
-	companion->setResultHandler(resultHandler);
-	companion->setErrorHandler(errorHandler);
+    companion->setSkipFrame(0);
+    companion->setImageBuffer(20);
+    companion->setResultHandler(resultHandler);
+    companion->setErrorHandler(errorHandler);
 
-	// Setup video source to obtain images.
-	Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
+    // Setup video source to obtain images.
+    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
 
-	// Set input source
-	companion->setSource(stream);
+    // Set input source
+    companion->setSource(stream);
 
-	// Store all searched data models
-	for (int i = 0; i < images.size(); i++) 
-	{
-		if (!recognition->addModel(i, cv::imread(images[i], cv::IMREAD_GRAYSCALE)))
-		{
-			std::cout << "Model not added";
-		}
-	}
+    // Store all searched data models
+    for (int i = 0; i < images.size(); i++) 
+    {
+        if (!recognition->addModel(i, cv::imread(images[i], cv::IMREAD_GRAYSCALE)))
+        {
+            std::cout << "Model not added";
+        }
+    }
 
-	// Execute companion
-	try 
-	{
-		companion->run();
-	}
-	catch (Companion::Error::Code errorCode) 
-	{
-		errorHandler(errorCode);
-	}
+    // Execute companion
+    try 
+    {
+        companion->run();
+    }
+    catch (Companion::Error::Code errorCode) 
+    {
+        errorHandler(errorCode);
+    }
 
-	return 0;
+    return 0;
 }

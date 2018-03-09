@@ -25,7 +25,7 @@ if(UNIX)
 endif()
 
 if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++11")
 endif(MSVC)
 
 set(VIDEO_EXAMPLE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Data/video/lab.mov")
