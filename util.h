@@ -1,6 +1,6 @@
 /*
- * This program is an example for libComapanion.
- * Copyright (C) 2016-2018 Andreas Sekulski
+ * This program is an usage example for Companion.
+ * Copyright (C) 2016-2018 Andreas Sekulski, Dimitri Kotlovsky
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
