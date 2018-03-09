@@ -50,7 +50,7 @@ int main()
 	cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
 	Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
 
-	// -------------- Image Processing Setup with shape detection --------------
+	// -------------- Image Processing Setup --------------
 	Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
 	companion->setProcessing(recognition);
 

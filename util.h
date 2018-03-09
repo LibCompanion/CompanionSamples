@@ -25,14 +25,14 @@
 #include <companion/draw/Frame.h>
 
 /**
- * Example implementation to handle results from libCompanion.
+ * Example implementation to handle results from Companion.
  * @param results Result from all detected or recognized objects.
  * @param source Image source from detected or recognized objects.
  */
 void resultHandler(CALLBACK_RESULT results, cv::Mat source);
 
 /**
- * Error handler for libCompanion.
+ * Error handler for Companion.
  * @param code Error code from companion.
  */
 void errorHandler(Companion::Error::Code code);

@@ -54,7 +54,7 @@ int main()
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(40);
     Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40);
 
-    // -------------- Image Processing Setup with shape detection --------------
+    // -------------- Image Processing Setup --------------
     Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
     Companion::Algorithm::Recognition::Hashing::LSH *lsh = new Companion::Algorithm::Recognition::Hashing::LSH();
 
@@ -63,7 +63,6 @@ int main()
         shapeDetection,
         lsh);
 
-    // -------------- Image Processing Setup with shape detection --------------
     Companion::Processing::Recognition::HybridRecognition* recognition = new Companion::Processing::Recognition::HybridRecognition(hashRecognition, matching, 50);
     companion->setProcessing(recognition);
 

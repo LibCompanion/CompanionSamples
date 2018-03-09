@@ -51,7 +51,7 @@ set(ALL_SOURCES ${SOURCE1} ${SOURCE2} ${SOURCE3} ${SOURCE4} ${SOURCE_UTIL})
 set(ALL_TARGETS CPUFeatureMatchingVideo CPUFeatureMatchingRealtime CPUFeatureMatchingImageStream ${CUDA_TARGET})
 
 # Add target properties
-set_property(TARGET ${ALL_TARGETS} PROPERTY FOLDER "libCompanionSamples")
+set_property(TARGET ${ALL_TARGETS} PROPERTY FOLDER "CompanionSamples")
 
 # Add install instructions (also add debug postfix for differentiation)
 set_property(TARGET ${ALL_TARGETS} PROPERTY DEBUG_POSTFIX "D")

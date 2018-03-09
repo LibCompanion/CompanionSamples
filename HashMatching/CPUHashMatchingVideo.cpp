@@ -46,7 +46,7 @@ int main()
 	// -------------- Setup used processing algo. --------------
 	Companion::Configuration *companion = new Companion::Configuration();
 
-	// -------------- Image Processing Setup with shape detection --------------
+	// -------------- Image Processing Setup --------------
 	Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
     Companion::Algorithm::Recognition::Hashing::LSH *lsh = new Companion::Algorithm::Recognition::Hashing::LSH();
 
