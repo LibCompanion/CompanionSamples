@@ -1,12 +1,12 @@
 # Samples for Companion
 
-![Companion](https://libcompanion.github.io/CompanionDoc/images/logo.png "Companion")
+These samples provide several usage examples for [Companion](https://github.com/LibCompanion/Companion).
 
-# Build Companion Samples
+## Build Companion Samples
 
-[Samples](https://github.com/LibCompanion/CompanionSamples) are included as a submodule or can be referenced via the CMake variable `Companion_SAMPLE_MODULE`. To build the samples you have to enable the `Companion_BUILD_SAMPLES` flag.
+These samples are included into [Companion](https://github.com/LibCompanion/Companion) as a submodule or can be referenced via the CMake variable `Companion_SAMPLE_MODULE`. To build the samples you have to enable the `Companion_BUILD_SAMPLES` flag.
 
-## Build Samples from Submodule
+### Build Samples from Submodule
 
 ```
 git clone https://github.com/LibCompanion/Companion.git
@@ -16,7 +16,7 @@ cmake -DCompanion_BUILD_SAMPLES=ON
 make
 ```
 
-## Build Samples from Project
+### Build Samples from Project
 
 ```
 git clone https://github.com/LibCompanion/Companion.git
@@ -31,7 +31,7 @@ make
 ## License
 
 ```
-This program are usage example for Companion.
+This program is an usage example for Companion.
 Copyright (C) 2016-2018 Andreas Sekulski, Dimitri Kotlovsky
 
 This program is free software: you can redistribute it and/or modify
