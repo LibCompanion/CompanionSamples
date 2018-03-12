@@ -24,8 +24,8 @@
 #include "ressources.h"
 
 /**
- * This example show an setup for an CPU based shape detection companion configuration. Following features will be shown
- * in this example.
+ * This examples show a setup for a CPU based shape detection Companion configuration. Following features will be shown
+ * in this example:
  *   - Video file handling
  *   - CPU based simple quadrangular shape detection
  *   - Callback handler example are implemented in util.h

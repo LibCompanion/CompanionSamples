@@ -27,8 +27,8 @@
 #include "ressources.h"
 
 /**
- * This example show an setup for an CPU based hash matching companion configuration. Following features will be shown
- * in this example.
+ * This example shows a setup for a CPU based hash matching Companion configuration. Following features will be shown
+ * in this example:
  *   - Video file handling
  *   - Model handling to search in video
  *   - CPU based hash matching

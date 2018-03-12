@@ -25,8 +25,8 @@
 #include "ressources.h"
 
 /**
- * This example show an setup for an Cuda based feature matching companion configuration. Following features will be shown
- * in this example.
+ * This example shows a setup for a Cuda based feature matching Companion configuration. Following features will be shown
+ * in this example:
  *   - Video file handling
  *   - Model handling to search in video
  *   - Cuda based feature matching with OpenCV 3.X (Cuda ORB algorithm will be used)

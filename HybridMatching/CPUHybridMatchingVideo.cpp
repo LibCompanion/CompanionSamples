@@ -28,8 +28,8 @@
 #include "ressources.h"
 
 /**
- * This example show an setup for an CPU based hybrid matching companion configuration. Following features will be shown
- * in this example.
+ * This example shows a setup for a CPU based hybrid matching Companion configuration. Following features will be shown
+ * in this example:
  *   - Video file handling
  *   - Model handling to search in video
  *   - CPU based feature matching with OpenCV 3.X (BRISK algorithm will be used)
