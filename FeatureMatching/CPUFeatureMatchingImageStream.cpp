@@ -94,9 +94,10 @@ int main()
     // -------------- Image Processing Setup --------------
     Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
     companion->setProcessing(recognition);
+
     companion->setSkipFrame(0);
     companion->setImageBuffer(10);
-    companion->setResultHandler(resultHandler, Companion::ColorFormat::BGR);
+    companion->setResultHandler(resultHandler);
     companion->setErrorHandler(errorHandler);
 
     // Setup example for an streaming data from a set of images.

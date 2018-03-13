@@ -39,7 +39,7 @@ int main()
     Companion::Configuration *companion = new Companion::Configuration();
 
     // -------------- Image Processing Setup --------------
-    Companion::Algorithm::Detection::ShapeDetection *shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
+    Companion::Algorithm::Detection::ShapeDetection *shapeDetection = new Companion::Algorithm::Detection::ShapeDetection(4, 4, "Quad");
     Companion::Processing::Detection::ObjectDetection *detection = new Companion::Processing::Detection::ObjectDetection(shapeDetection);
     companion->setProcessing(detection);
 
