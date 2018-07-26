@@ -38,17 +38,19 @@ int main()
     std::vector<std::string> images;
     images.push_back(OBJECT_LEFT);
     images.push_back(OBJECT_RIGHT);
+
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
     // -------------- Setup used processing algo. --------------
     Companion::Configuration *companion = new Companion::Configuration();
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+    int type = cv::DescriptorMatcher::FLANNBASED;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- CUDA ORB GPU FM  --------------
     cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
     feature->setBlurForDescriptor(true);
+
     Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, 10, 40);
 
     // -------------- Image Processing Setup --------------

@@ -29,7 +29,7 @@
  * in this example:
  *   - Video file handling
  *   - Model handling to search in video
- *   - CPU based feature matching with OpenCV 3.X (BRISK algorithm will be used)
+ *   - CPU based feature matching with OpenCV 3.X (BRISK or ORB algorithm will be used)
  *   - Callback handler example are implemented in util.h
  */
 int main() 
@@ -38,17 +38,22 @@ int main()
     std::vector<std::string> images;
     images.push_back(OBJECT_LEFT);
     images.push_back(OBJECT_RIGHT);
+
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
     // -------------- Setup used processing algo. --------------
     Companion::Configuration *companion = new Companion::Configuration();
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
+    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMINGLUT;
+    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+
+    // -------------- ORB CPU FM --------------
+    //cv::Ptr<cv::ORB> feature = cv::ORB::create(6000);
+
+    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 10, true);
 
     // -------------- Image Processing Setup --------------
     Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
