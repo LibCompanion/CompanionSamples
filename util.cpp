@@ -20,26 +20,26 @@
 
 void resultHandler(CALLBACK_RESULT results, cv::Mat source)
 {
-    Companion::Draw::Frame *frame;
-    Companion::Model::Result::Result *result;
+	PTR_DRAW_FRAME frame;
+	PTR_RESULT result;
 
     for (size_t i = 0; i < results.size(); i++)
     {
         // Mark the detected or recognized object
         result = results.at(i);
-        result->getDrawable()->draw(source);
+        result->Drawable()->Draw(source);
 
         // Draw the id of the detected or recognized object
-        frame = dynamic_cast<Companion::Draw::Frame*>(result->getDrawable());
+        frame = std::dynamic_pointer_cast<DRAW_FRAME>(result->Drawable());
         if (frame != nullptr)
         {
             cv::putText(source,
-                result->getDescription(),
-                frame->getTopRight(),
+                result->Description(),
+                frame->TopRight(),
                 cv::FONT_HERSHEY_DUPLEX,
                 2.0,
-                frame->getColor(),
-                frame->getThickness()
+                frame->Color(),
+                frame->Thickness()
             );
         }
     }
@@ -53,5 +53,5 @@ void resultHandler(CALLBACK_RESULT results, cv::Mat source)
 void errorHandler(Companion::Error::Code code)
 {
     // Obtain detailed error message from code
-    std::cout << Companion::Error::getError(code) << std::endl;
+    std::cout << Companion::Error::Error(code) << std::endl;
 }

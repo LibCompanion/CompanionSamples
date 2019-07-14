@@ -35,29 +35,26 @@ int main()
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-    // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
-
     // -------------- Image Processing Setup --------------
-    Companion::Algorithm::Detection::ShapeDetection *shapeDetection = new Companion::Algorithm::Detection::ShapeDetection(4, 4, "Quad");
-    Companion::Processing::Detection::ObjectDetection *detection = new Companion::Processing::Detection::ObjectDetection(shapeDetection);
-    companion->setProcessing(detection);
-
-    companion->setSkipFrame(0);
-    companion->setImageBuffer(20);
-    companion->setResultHandler(resultHandler);
-    companion->setErrorHandler(errorHandler);
+	PTR_SHAPE_DETECTION shapeDetection = std::make_shared<SHAPE_DETECTION>(4, 4, "Quad");
+	PTR_OBJECT_DETECTION detection = std::make_shared<OBJECT_DETECTION>(shapeDetection);
+    
+	std::unique_ptr<COMPANION> companion = std::make_unique<COMPANION>();
+	companion->Processing(detection);
+    companion->SkipFrame(0);
+    companion->ImageBuffer(20);
+    companion->ResultCallback(resultHandler);
+    companion->ErrorCallback(errorHandler);
 
     // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
-
+	PTR_VIDEO_STREAM stream = std::make_shared<VIDEO_STREAM>(testVideo);
     // Set input source
-    companion->setSource(stream);
+    companion->Source(stream);
 
     // Execute companion
     try 
     {
-        companion->run();
+        companion->Run();
     }
     catch (Companion::Error::Code errorCode) 
     {

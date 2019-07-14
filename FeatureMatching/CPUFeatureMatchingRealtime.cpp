@@ -40,46 +40,41 @@ int main()
     images.push_back(OBJECT_RIGHT);
 
     // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
     int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(30);
-    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true);
+	PTR_MATCHING_RECOGNITION matching = std::make_shared<FEATURE_MATCHING>(feature, feature, matcher, type, 10, 40, true);
+	PTR_MATCH_RECOGNITION recognition = std::make_shared<MATCH_RECOGNITION>(matching, Companion::SCALING::SCALE_640x360);
 
-    // -------------- Image Processing Setup --------------
-    Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
-    companion->setProcessing(recognition);
-    companion->setSkipFrame(0);
-    companion->setResultHandler(resultHandler);
-    companion->setErrorHandler(errorHandler);
+	std::unique_ptr<COMPANION> companion = std::make_unique<COMPANION>();
+	companion->Processing(recognition);
+    companion->SkipFrame(0);
+    companion->ResultCallback(resultHandler);
+    companion->ErrorCallback(errorHandler);
 
     // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(0); // Use first camera device.
-
+	PTR_VIDEO_STREAM stream = std::make_shared<VIDEO_STREAM>(0); // Use first camera device.
     // Set input source
-    companion->setSource(stream);
+    companion->Source(stream);
 
-    // Store all searched data models
-    Companion::Model::Processing::FeatureMatchingModel *model;
     for (int i = 0; i < images.size(); i++) 
     {
+		PTR_MODEL_FEATURE_MATCHING model = std::make_shared<MODEL_FEATURE_MATCHING>();
+        model->ID(i);
+        model->Image(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
 
-        model = new Companion::Model::Processing::FeatureMatchingModel();
-        model->setID(i);
-        model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
-
-        if (!recognition->addModel(model))
+        if (!recognition->AddModel(model))
         {
-            std::cout << "Model ID" << model->getID() << " not added";
+            std::cout << "Model ID" << model->ID() << " not added";
         }
     }
 
     // Execute companion
     try 
     {
-        companion->run();
+        companion->Run();
     }
     catch (Companion::Error::Code errorCode)
     {

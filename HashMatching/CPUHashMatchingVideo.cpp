@@ -43,35 +43,28 @@ int main()
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-    // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
-
     // -------------- Image Processing Setup --------------
-    Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
-    Companion::Algorithm::Recognition::Hashing::LSH *lsh = new Companion::Algorithm::Recognition::Hashing::LSH();
-
+	PTR_SHAPE_DETECTION shapeDetection = std::make_shared<SHAPE_DETECTION>();
+    PTR_HASHING_LSH lsh = std::make_shared<HASHING_LSH>();
     // Original Aspect Ration is 397x561
-    Companion::Processing::Recognition::HashRecognition* recognition = new Companion::Processing::Recognition::HashRecognition(cv::Size(50, 70),
-        shapeDetection,
-        lsh);
+	PTR_HASH_RECOGNITION recognition = std::make_shared<HASH_RECOGNITION>(cv::Size(50, 70), shapeDetection, lsh);
 
-    companion->setProcessing(recognition);
-
-    companion->setSkipFrame(0);
-    companion->setImageBuffer(20);
-    companion->setResultHandler(resultHandler);
-    companion->setErrorHandler(errorHandler);
+	std::unique_ptr<COMPANION> companion = std::make_unique<COMPANION>();
+    companion->Processing(recognition);
+    companion->SkipFrame(0);
+    companion->ImageBuffer(20);
+    companion->ResultCallback(resultHandler);
+    companion->ErrorCallback(errorHandler);
 
     // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
-
+	PTR_VIDEO_STREAM stream = std::make_shared<VIDEO_STREAM>(testVideo);
     // Set input source
-    companion->setSource(stream);
+    companion->Source(stream);
 
     // Store all searched data models
     for (int i = 0; i < images.size(); i++) 
     {
-        if (!recognition->addModel(i, cv::imread(images[i], cv::IMREAD_GRAYSCALE)))
+        if (!recognition->AddModel(i, cv::imread(images[i], cv::IMREAD_GRAYSCALE)))
         {
             std::cout << "Model not added";
         }
@@ -80,7 +73,7 @@ int main()
     // Execute companion
     try 
     {
-        companion->run();
+        companion->Run();
     }
     catch (Companion::Error::Code errorCode) 
     {

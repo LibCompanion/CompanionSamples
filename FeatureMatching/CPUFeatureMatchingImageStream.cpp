@@ -25,7 +25,7 @@
 #include "../util.h"
 #include "ressources.h"
 
-void imageStream(Companion::Input::Image *stream) {
+void imageStream(PTR_IMAGE_STREAM stream) {
 
     int i = 1;
     int n = 4 - 1;
@@ -52,7 +52,7 @@ void imageStream(Companion::Input::Image *stream) {
         }
 
         // Add image to stream
-        if (!stream->addImage(OBJECT_IMAGES_RAW + fileNr + std::to_string(i) + ".jpg")) 
+        if (!stream->AddImage(OBJECT_IMAGES_RAW + fileNr + std::to_string(i) + ".jpg")) 
         {
             lastImage = true;
         }
@@ -64,7 +64,7 @@ void imageStream(Companion::Input::Image *stream) {
     }
 
     // Stop this stream after all images are processed.
-    stream->finishAfterProcessing();
+    stream->FinishAfterProcessing();
 }
 
 /**
@@ -83,39 +83,36 @@ int main()
     images.push_back(OBJECT_RIGHT);
 
     // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
     int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
+	PTR_MATCHING_RECOGNITION matching = std::make_shared<FEATURE_MATCHING>(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
+	PTR_MATCH_RECOGNITION recognition = std::make_shared<MATCH_RECOGNITION>(matching, Companion::SCALING::SCALE_640x360);
 
-    // -------------- Image Processing Setup --------------
-    Companion::Processing::Recognition::MatchRecognition* recognition = new Companion::Processing::Recognition::MatchRecognition(matching, Companion::SCALING::SCALE_640x360);
-    companion->setProcessing(recognition);
-
-    companion->setSkipFrame(0);
-    companion->setImageBuffer(10);
-    companion->setResultHandler(resultHandler);
-    companion->setErrorHandler(errorHandler);
+	std::unique_ptr<COMPANION> companion = std::make_unique<COMPANION>();
+	companion->Processing(recognition);
+    companion->SkipFrame(0);
+    companion->ImageBuffer(10);
+    companion->ResultCallback(resultHandler);
+    companion->ErrorCallback(errorHandler);
 
     // Setup example for an streaming data from a set of images.
-    Companion::Input::Image *stream = new Companion::Input::Image(50);
+	PTR_IMAGE_STREAM stream = std::make_shared<IMAGE_STREAM>(50);
     std::thread imgThread = std::thread(&imageStream, stream);
 
     // Set input source
-    companion->setSource(stream);
+    companion->Source(stream);
 
     // Store all searched data models
     Companion::Model::Processing::FeatureMatchingModel *model;
     for (int i = 0; i < images.size(); i++) 
     {
-        model = new Companion::Model::Processing::FeatureMatchingModel();
-        model->setID(i);
-        model->setImage(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
-
-        if (!recognition->addModel(model))
+		PTR_MODEL_FEATURE_MATCHING model = std::make_shared<MODEL_FEATURE_MATCHING>();
+        model->ID(i);
+        model->Image(cv::imread(images[i], cv::IMREAD_GRAYSCALE));
+        if (!recognition->AddModel(model))
         {
             std::cout << "Model not added";
         }
@@ -124,7 +121,7 @@ int main()
     // Execute companion
     try
     {
-        companion->run();
+        companion->Run();
     }
     catch (Companion::Error::Code errorCode) 
     {

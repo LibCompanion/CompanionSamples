@@ -44,49 +44,42 @@ int main()
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-    // -------------- Setup used processing algo. --------------
-    Companion::Configuration *companion = new Companion::Configuration();
-
     int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(40);
-    Companion::Algorithm::Recognition::Matching::Matching *matching = new Companion::Algorithm::Recognition::Matching::FeatureMatching(feature, feature, matcher, type, 10, 40);
+	PTR_FEATURE_MATCHING matching = std::make_shared<FEATURE_MATCHING>(feature, feature, matcher, type, 10, 40);
 
     // -------------- Image Processing Setup --------------
-    Companion::Algorithm::Detection::ShapeDetection* shapeDetection = new Companion::Algorithm::Detection::ShapeDetection();
-    Companion::Algorithm::Recognition::Hashing::LSH *lsh = new Companion::Algorithm::Recognition::Hashing::LSH();
-
+	PTR_SHAPE_DETECTION shapeDetection = std::make_shared<SHAPE_DETECTION>();
+	PTR_HASHING_LSH lsh = std::make_shared<HASHING_LSH>();
     // Original Aspect Ration is 397x561
-    Companion::Processing::Recognition::HashRecognition* hashRecognition = new Companion::Processing::Recognition::HashRecognition(cv::Size(50, 70),
-        shapeDetection,
-        lsh);
+	PTR_HASH_RECOGNITION hashRecognition = std::make_shared<HASH_RECOGNITION>(cv::Size(50, 70), shapeDetection, lsh);
+	PTR_HYBRID_RECOGNITION recognition = std::make_shared<HYBRID_RECOGNITION>(hashRecognition, matching, 50);
+    
+	std::unique_ptr<COMPANION> companion = std::make_unique<COMPANION>();
+	companion->Processing(recognition);
+    companion->SkipFrame(0);
+    companion->ImageBuffer(20);
+    companion->ResultCallback(resultHandler);
+    companion->ErrorCallback(errorHandler);
 
-    Companion::Processing::Recognition::HybridRecognition* recognition = new Companion::Processing::Recognition::HybridRecognition(hashRecognition, matching, 50);
-    companion->setProcessing(recognition);
-
-    companion->setSkipFrame(0);
-    companion->setImageBuffer(20);
-    companion->setResultHandler(resultHandler);
-    companion->setErrorHandler(errorHandler);
-
-    // Setup video source to obtain images.
-    Companion::Input::Stream *stream = new Companion::Input::Video(testVideo);
-
+	// Setup video source to obtain images.
+	PTR_VIDEO_STREAM stream = std::make_shared<VIDEO_STREAM>(testVideo);
     // Set input source
-    companion->setSource(stream);
+    companion->Source(stream);
 
     // Store all searched data models
     for (int i = 0; i < images.size(); i++)
     {
-        recognition->addModel(cv::imread(images[i], cv::IMREAD_GRAYSCALE), i);
+        recognition->AddModel(cv::imread(images[i], cv::IMREAD_GRAYSCALE), i);
     }
 
     // Execute companion
     try
     {
-        companion->run();
+        companion->Run();
     }
     catch (Companion::Error::Code errorCode)
     {
