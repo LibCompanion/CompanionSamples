@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+find_package(OpenCV REQUIRED COMPONENTS core highgui)
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
@@ -26,7 +28,7 @@ set(SOURCE_UTIL ../util.cpp ../util.h)
 # Setup CPUHashMatchingVideo
 set(SOURCE1 CPUHashMatchingVideo.cpp ${SOURCE_UTIL})
 add_executable(CPUHashMatchingVideo ${SOURCE1})
-target_link_libraries(CPUHashMatchingVideo Companion)
+target_link_libraries(CPUHashMatchingVideo Companion ${OpenCV_LIBS})
 
 # Combine all sources and targets
 set(ALL_SOURCES ${SOURCE1} ${SOURCE_UTIL})

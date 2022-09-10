@@ -24,31 +24,31 @@
 #include "../util.h"
 #include "ressources.h"
 
-/**
- * This example shows a setup for a Cuda based feature matching Companion configuration. Following features will be shown
- * in this example:
- *   - Video file handling
- *   - Model handling to search in video
- *   - Cuda based feature matching with OpenCV 3.X (Cuda ORB algorithm will be used)
- *   - Callback handler example are implemented in util.h
- */
-int main() 
+ /**
+  * This example shows a setup for a Cuda based feature matching Companion configuration. Following features will be shown
+  * in this example:
+  *   - Video file handling
+  *   - Model handling to search in video
+  *   - Cuda based feature matching with OpenCV 3.X (Cuda ORB algorithm will be used)
+  *   - Callback handler example are implemented in util.h
+  */
+int main()
 {
-    // Sample objects to search as an image list.
-    std::vector<std::string> images;
-    images.push_back(OBJECT_LEFT);
-    images.push_back(OBJECT_RIGHT);
+	// Sample objects to search as an image list.
+	std::vector<std::string> images;
+	images.push_back(OBJECT_LEFT);
+	images.push_back(OBJECT_RIGHT);
 
-    // Sample video to search objects.
-    std::string testVideo = VIDEO_EXAMPLE_PATH;
+	// Sample video to search objects.
+	std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-    // -------------- Setup used processing algo. --------------
-    int type = cv::DescriptorMatcher::FLANNBASED;
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
+	// -------------- Setup used processing algo. --------------
+	int type = cv::DescriptorMatcher::FLANNBASED;
+	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
-    // -------------- CUDA ORB GPU FM  --------------
-    cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
-    feature->setBlurForDescriptor(true);
+	// -------------- CUDA ORB GPU FM  --------------
+	cv::Ptr<cv::cuda::ORB> feature = cv::cuda::ORB::create(6000);
+	feature->setBlurForDescriptor(true);
 
 	try
 	{
@@ -94,5 +94,5 @@ int main()
 		std::cout << ex.msg;
 	}
 
-    return 0;
+	return 0;
 }

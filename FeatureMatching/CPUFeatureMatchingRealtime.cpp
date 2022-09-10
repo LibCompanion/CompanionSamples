@@ -41,7 +41,7 @@ int main()
 
     // -------------- Setup used processing algo. --------------
     int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
+    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE_HAMMING);
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(30);

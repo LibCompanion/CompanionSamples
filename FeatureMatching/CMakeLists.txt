@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+find_package(OpenCV REQUIRED COMPONENTS core highgui)
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
@@ -26,24 +28,24 @@ set(SOURCE_UTIL ../util.cpp ../util.h)
 # Setup CPUFeatureMatchingVideo
 set(SOURCE1 CPUFeatureMatchingVideo.cpp ${SOURCE_UTIL})
 add_executable(CPUFeatureMatchingVideo ${SOURCE1})
-target_link_libraries(CPUFeatureMatchingVideo Companion)
+target_link_libraries(CPUFeatureMatchingVideo Companion ${OpenCV_LIBS})
 
 # Setup CPUFeatureMatchingRealtime
 set(SOURCE2 CPUFeatureMatchingRealtime.cpp ${SOURCE_UTIL})
 add_executable(CPUFeatureMatchingRealtime ${SOURCE2})
-target_link_libraries(CPUFeatureMatchingRealtime Companion)
+target_link_libraries(CPUFeatureMatchingRealtime Companion ${OpenCV_LIBS})
 
 # Setup CPUFeatureMatchingImageStream
 set(SOURCE3 CPUFeatureMatchingImageStream.cpp ${SOURCE_UTIL})
 add_executable(CPUFeatureMatchingImageStream ${SOURCE3})
-target_link_libraries(CPUFeatureMatchingImageStream Companion)
+target_link_libraries(CPUFeatureMatchingImageStream Companion ${OpenCV_LIBS})
 
 # Setup CudaFeatureMatchingVideo
 if(Companion_USE_CUDA)
     set(SOURCE4 CudaFeatureMatchingVideo.cpp ${SOURCE_UTIL})
     set(CUDA_TARGET CudaFeatureMatchingVideo)
     add_executable(CudaFeatureMatchingVideo ${SOURCE4})
-    target_link_libraries(CudaFeatureMatchingVideo Companion)
+    target_link_libraries(CudaFeatureMatchingVideo Companion ${OpenCV_LIBS})
 endif()
 
 # Combine all sources and targets

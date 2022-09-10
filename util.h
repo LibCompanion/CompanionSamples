@@ -20,6 +20,8 @@
 #define COMPANION_UTIL_H_H
 
 #include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 #include <companion/util/Definitions.h>
 #include <companion/util/CompanionError.h>
 #include <companion/draw/Frame.h>
