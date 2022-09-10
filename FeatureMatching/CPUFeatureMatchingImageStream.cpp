@@ -83,11 +83,12 @@ int main()
     images.push_back(OBJECT_RIGHT);
 
     // -------------- Setup used processing algo. --------------
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE_HAMMING);
+    auto type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
-	PTR_MATCHING_RECOGNITION matching = std::make_shared<FEATURE_MATCHING>(feature, feature, matcher, cv::DescriptorMatcher::BRUTEFORCE_HAMMING, 10, 40, true, 3.0, 100);
+	PTR_MATCHING_RECOGNITION matching = std::make_shared<FEATURE_MATCHING>(feature, feature, matcher, type, 10, 40, true, 3.0, 100);
 	PTR_MATCH_RECOGNITION recognition = std::make_shared<MATCH_RECOGNITION>(matching, Companion::SCALING::SCALE_640x360);
 
 	std::unique_ptr<COMPANION> companion = std::make_unique<COMPANION>();

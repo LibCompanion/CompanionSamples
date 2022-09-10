@@ -40,7 +40,7 @@ int main()
     images.push_back(OBJECT_RIGHT);
 
     // -------------- Setup used processing algo. --------------
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+    auto type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE_HAMMING);
 
     // -------------- BRISK CPU FM --------------

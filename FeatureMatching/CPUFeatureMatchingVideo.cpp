@@ -43,7 +43,7 @@ int main()
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
     // -------------- BRISK CPU FM --------------
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMINGLUT;
+    auto type = cv::DescriptorMatcher::BRUTEFORCE_HAMMINGLUT;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
     cv::Ptr<cv::BRISK> feature = cv::BRISK::create(60);
 

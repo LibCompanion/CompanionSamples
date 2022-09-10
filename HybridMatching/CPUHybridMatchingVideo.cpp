@@ -44,7 +44,7 @@ int main()
     // Sample video to search objects.
     std::string testVideo = VIDEO_EXAMPLE_PATH;
 
-    int type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
+    auto type = cv::DescriptorMatcher::BRUTEFORCE_HAMMING;
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(type);
 
     // -------------- BRISK CPU FM --------------
